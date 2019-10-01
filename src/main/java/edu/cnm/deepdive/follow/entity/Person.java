@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.stereotype.Component;
 
+
 @Component
 @JsonIgnoreProperties(
     value = {"created", "updated", "follows", "followers", "id",
@@ -30,11 +31,6 @@ import org.springframework.stereotype.Component;
 public class Person implements Comparable, FlatPerson {
 
   private static EntityLinks entityLinks;
-  //
-  // public Person(String firstName, String lastName){
-  //   this.lastName = lastName;
-  //   this.firstName = firstName;
-  // }
   @Id
   @GeneratedValue(generator = "uuid2")
   @GenericGenerator(name = "uuid2", strategy = "uuid2")
