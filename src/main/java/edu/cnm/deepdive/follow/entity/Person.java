@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import edu.cnm.deepdive.follow.view.FlatPerson;
 import java.net.URI;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
@@ -22,13 +23,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.stereotype.Component;
 
-
+/**
+ * Defines a database entity and REST resource representing the person, and its relationships to
+ * zero or more {@link Person} resources.
+ */
+@Entity
 @Component
 @JsonIgnoreProperties(
     value = {"created", "updated", "follows", "followers", "id",
         "href"}, allowGetters = true, ignoreUnknown = true)
-@Entity
-public class Person implements Comparable, FlatPerson {
+public class Person implements Comparable<Person>, FlatPerson {
 
   private static EntityLinks entityLinks;
   @Id
@@ -52,15 +56,16 @@ public class Person implements Comparable, FlatPerson {
   @ManyToMany(mappedBy = "followers", fetch = FetchType.LAZY)
   private Set<Person> follows = new TreeSet<>();
 
-  @Override
-  public int compareTo(Object o) {
-    return 0;
-  }
 
   public String getFirstName() {
     return firstName;
   }
 
+  /**
+   * Sets the first name of this <code>Person</code> instance.
+   *
+   * @param firstName person first name.
+   */
   public void setFirstName(String firstName) {
     this.firstName = firstName;
   }
@@ -69,6 +74,11 @@ public class Person implements Comparable, FlatPerson {
     return lastName;
   }
 
+  /**
+   * Sets the last name of this <code>Person</code> instance.
+   *
+   * @param lastName person last name.
+   */
   public void setLastName(String lastName) {
     this.lastName = lastName;
   }
@@ -77,13 +87,26 @@ public class Person implements Comparable, FlatPerson {
     return id;
   }
 
+  /**
+   * Returns a {@link Set} of the {@link Person} instances that are followers of this instance of
+   * {@code Person}.
+   *
+   * @return {@link Person} set.
+   */
   public Set<Person> getFollowers() {
     return followers;
   }
 
+  /**
+   * Returns a {@link Set} of the {@link Person} instances that this instance of {@code Person}
+   * follows.
+   *
+   * @return {@link Person} set.
+   */
   public Set<Person> getFollows() {
     return follows;
   }
+
 
   public URI getHref() {
     return entityLinks.linkForSingleResource(Person.class, id).toUri();
@@ -99,4 +122,33 @@ public class Person implements Comparable, FlatPerson {
     Person.entityLinks = entityLinks;
   }
 
+  @Override
+  public int compareTo(Person other) {
+    int comparison = lastName.compareTo(other.lastName);
+    if (comparison == 0) {
+      comparison = firstName.compareTo(other.firstName);
+    }
+    return comparison;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof Person) {
+      Person person = (Person) obj;
+      return (getFirstName().equals(person.firstName)
+          && (getLastName().equals(person.lastName)));
+    } else {
+      return false;
+    }
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(firstName,lastName);
+  }
+
+  @Override
+  public String toString() {
+    return getFirstName() + getLastName();
+  }
 }
