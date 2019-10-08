@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import edu.cnm.deepdive.follow.view.FlatPerson;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
@@ -133,36 +134,30 @@ public class Person implements Comparable<Person>, FlatPerson {
 
   /**
    * Implements an equality test based on a case-insensitive comparison of the text returned by
-   * {@link #getFirstName()} and {@link * #getLastName()},. If the other object is
+   * {@link #getFirstName()} and {@link #getLastName()},. If the other object is
    * <code>null</code>, or if one (but not both) of the instances' {@link #getFirstName()} and
    * {@link #getLastName()}, values is <code>null</code>, then <code>false</code> is returned;
    * otherwise, the name values are compared using {@link String#equalsIgnoreCase(String)}.
    *
-   * @param obj object to which this instance will compare itself, based on {@link #getFirstName()
+   * @param obj object to which this instance will compare itself, based on {@link #getFirstName()}
    * and {@link #getLastName()},
    * @return <code>true</code> if the values are equal, ignoring case; <code>false</code> otherwise.
-   * @link #getLastName()}.
+   * {@link #getLastName()}.
    */
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof Person) {
-      Person person = (Person) obj;
-      return (getFirstName().equals(person.firstName)
-          && (getLastName().equals(person.lastName)));
-    } else {
-      return false;
-    }
+    return (obj == this
+        || (
+            obj instanceof Person
+            && Arrays.equals(fields(), ((Person) obj).fields())
+        )
+    );
   }
-  //   @Override
-  //  public boolean equals(Object obj) {
-  //    if (obj == null || obj.getClass() != getClass()) {
-  //      return false;
-  //    }
-  //    return Objects.equals(firstName, ((Person) obj).firstName)
-  //        || (firstName != null && firstName.equalsIgnoreCase(((Person) obj).firstName)) && Objects
-  //        .equals(lastName, ((Person) obj).lastName) || (lastName != null && lastName
-  //        .equalsIgnoreCase(((Person) obj).lastName));
-  //  }
+
+  protected Object[] fields() {
+
+    return new Object[]{firstName, lastName};
+  }
 
   /**
    * Computes and returns a hash value computed from {@link #getFirstName()} and {@link
@@ -172,7 +167,7 @@ public class Person implements Comparable<Person>, FlatPerson {
    */
   @Override
   public int hashCode() {
-    return Objects.hash(firstName, lastName);
+    return Objects.hash(fields());
   }
 
   /**
