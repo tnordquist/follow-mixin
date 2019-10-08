@@ -131,6 +131,18 @@ public class Person implements Comparable<Person>, FlatPerson {
     return comparison;
   }
 
+  /**
+   * Implements an equality test based on a case-insensitive comparison of the text returned by
+   * {@link #getFirstName()} and {@link * #getLastName()},. If the other object is
+   * <code>null</code>, or if one (but not both) of the instances' {@link #getFirstName()} and
+   * {@link #getLastName()}, values is <code>null</code>, then <code>false</code> is returned;
+   * otherwise, the name values are compared using {@link String#equalsIgnoreCase(String)}.
+   *
+   * @param obj object to which this instance will compare itself, based on {@link #getFirstName()
+   * and {@link #getLastName()},
+   * @return <code>true</code> if the values are equal, ignoring case; <code>false</code> otherwise.
+   * @link #getLastName()}.
+   */
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof Person) {
@@ -141,12 +153,33 @@ public class Person implements Comparable<Person>, FlatPerson {
       return false;
     }
   }
+  //   @Override
+  //  public boolean equals(Object obj) {
+  //    if (obj == null || obj.getClass() != getClass()) {
+  //      return false;
+  //    }
+  //    return Objects.equals(firstName, ((Person) obj).firstName)
+  //        || (firstName != null && firstName.equalsIgnoreCase(((Person) obj).firstName)) && Objects
+  //        .equals(lastName, ((Person) obj).lastName) || (lastName != null && lastName
+  //        .equalsIgnoreCase(((Person) obj).lastName));
+  //  }
 
+  /**
+   * Computes and returns a hash value computed from {@link #getFirstName()} and {@link
+   * #getLastName()}, after first converting to uppercase.
+   *
+   * @return hash value.
+   */
   @Override
   public int hashCode() {
-    return Objects.hash(firstName,lastName);
+    return Objects.hash(firstName, lastName);
   }
 
+  /**
+   * Returns string form of last name and first name of a {@link Person} object.
+   *
+   * @return string value
+   */
   @Override
   public String toString() {
     return getFirstName() + getLastName();

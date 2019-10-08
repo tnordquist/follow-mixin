@@ -5,10 +5,23 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.data.repository.CrudRepository;
 
+/**
+ * Declares database operations that can be performed on {@link Person} entity instances.
+ */
 public interface PersonRepository extends CrudRepository<Person, UUID> {
 
-    List<Person> findAllByOrderByLastName();
+  /**
+   * Selects and returns all {@link Person} instances, sorted in alphabetical order by last name.
+   *
+   * @return {@link Person} list of {@link Person} instances.
+   */
+  List<Person> findAllByOrderByLastName();
 
-    Person findByLastName(Person lastName);
+  /**
+   * Returns a {@link Person} instance.
+   *
+   * @return a {@link Person} instance.
+   */
+  Person findByLastName(Person lastName);
 
 }

@@ -69,7 +69,7 @@ public class PersonController {
 
   /**
    * Replaces the first and last name of the referenced existing {@link Person} resource with the
-   * name from the provided resource.
+   * name from the provided resource. 
    *
    * @param personId source {@link UUID}.
    * @param update {@link Person} resource to use to replace contents of existing source.
